@@ -22,7 +22,7 @@ filtered_df = df[
     (df["Property\nType"].isin(selected_type))
 ]
 
-st.title("🏡 Vivek Dashboard (CSV-Based)")
+st.title(" Investors score")
 
 # Suburb selector
 selected_suburb = st.selectbox("📍 Choose a Suburb", filtered_df["Suburb"].unique())
