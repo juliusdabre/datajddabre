@@ -78,3 +78,44 @@ st.download_button(
     file_name="heatmap_raw_investor_metrics.png",
     mime="image/png"
 )
+
+import pandas as pd
+import matplotlib.pyplot as plt
+import numpy as np
+
+# Load dataset
+df = pd.read_csv("propwealthnext_investor_cleaned_display.csv")
+
+# Select a few example suburbs to compare
+suburbs_to_compare = df["Suburb"].dropna().unique()[:3]
+metrics = [
+    "Investor Score (Out Of 100)", "Growth Gap Index", "10 Year Growth",
+    "Yield", "Buy Affordability (Years)", "Rent Affordability (% Of Income)"
+]
+
+# Normalize data for better radar comparison
+def normalize(series):
+    return (series - series.min()) / (series.max() - series.min())
+
+# Setup radar chart structure
+angles = np.linspace(0, 2 * np.pi, len(metrics), endpoint=False).tolist()
+angles += angles[:1]  # loop back to start
+
+fig, ax = plt.subplots(figsize=(8, 8), subplot_kw=dict(polar=True))
+colors = ['#FF5733', '#2980B9', '#27AE60']
+
+for i, suburb in enumerate(suburbs_to_compare):
+    row = df[df["Suburb"] == suburb][metrics].iloc[0]
+    values = [normalize(df[m])[df["Suburb"] == suburb].values[0] for m in metrics]
+    values += values[:1]  # repeat first to close loop
+    ax.plot(angles, values, label=suburb, linewidth=2, color=colors[i])
+    ax.fill(angles, values, alpha=0.25, color=colors[i])
+
+# Styling
+ax.set_title("🏙️ Investment Metric Radar Chart", fontsize=16, pad=20)
+ax.set_xticks(angles[:-1])
+ax.set_xticklabels(metrics, fontsize=10)
+ax.set_yticklabels([])
+ax.legend(loc='upper right', bbox_to_anchor=(1.2, 1.1))
+plt.tight_layout()
+plt.savefig("radar_chart_investor_metrics.png", dpi=300)
