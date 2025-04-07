@@ -59,7 +59,7 @@ fig = px.scatter_map(
 st.plotly_chart(fig)
 
 # Heatmap
-st.subheader("🔥 Correlation Heatmap")
+st.subheader(" Correlation Heatmap")
 heat_cols = [
     "Investor Score (Out Of 100)", "Growth Gap Index", "10 Year Growth",
     "Yield", "Buy Affordability (Years)", "Rent Affordability (% Of Income)"
